@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -22,3 +23,19 @@ def get_user(user_id: int):
             return user
         return {"error": "User not found"}
     
+
+class UserCreate(BaseModel):
+    name: str
+
+
+
+@app.post("/users")
+def create_user(user: UserCreate):
+    new_user = {
+        "id": len(users) + 1,
+        "name": user.name
+    }
+
+    users.append(new_user)
+    return new_user
+
